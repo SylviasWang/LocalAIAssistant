@@ -27,9 +27,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBox x:Name="TxtContent" Grid.Column="0" Margin ="0,0,2,0" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Button x:Name="BtnEnter" Content="送出" Padding="5,0,5,0"  Grid.Column="1" Command="{Binding SendCommand}"></Button>
+            <Button x:Name="BtnEnter" Content="Send" Padding="5,0,5,0"  Grid.Column="1" Command="{Binding SendCommand}"></Button>
+            <Button x:Name="BtnCancel" Content="Cancel" Padding="5,0,5,0"  Grid.Column="2" Command="{Binding SendCancelCommand}"></Button>
         </Grid>
     </Grid>
 </Window>

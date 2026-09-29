@@ -17,16 +17,28 @@ namespace LocalAIAssistant_App.ViewModels
 		[NotifyCanExecuteChangedFor(nameof(SendCommand))]
 		private string _inputText = string.Empty;
 
-		[RelayCommand(CanExecute = nameof(CanSend))]
-		private void Send()
+		[RelayCommand(CanExecute = nameof(CanSend), IncludeCancelCommand = true)]
+		private async Task SendAsync(CancellationToken cancellationToken)
 		{
 			ChatMessage userMsg = new ChatMessage {Role= MessageRole.User, Content=InputText};
 			Messages.Add (userMsg);
 
-			ChatMessage replyMsg = new ChatMessage { Role = MessageRole.Assistant, Content = "Receive [" + InputText + "]"};
+			InputText = string.Empty;
+
+			ChatMessage replyMsg = new ChatMessage { Role = MessageRole.Assistant, Content = "Thinking..." };
 			Messages.Add(replyMsg);
 
-			InputText = string.Empty;
+			try
+			{
+				await Task.Delay(3000, cancellationToken);
+
+				replyMsg.Content = "Receive [" + userMsg.Content + "]";
+			}
+			catch (OperationCanceledException)
+			{
+				replyMsg.Content = "Canceled.";
+			}
+			
 		}
 
 		private bool CanSend() => !string.IsNullOrWhiteSpace(InputText);
