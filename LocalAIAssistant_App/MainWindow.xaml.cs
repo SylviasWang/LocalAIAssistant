@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using LocalAIAssistant.Infrastructure;
+using LocalAIAssistant.Infrastructure.Ollama;
+using LocalAIAssistant_App.ViewModels;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using LocalAIAssistant_App.ViewModels;
 
 namespace LocalAIAssistant_App
 {
@@ -20,7 +22,8 @@ namespace LocalAIAssistant_App
         public MainWindow()
         {
             InitializeComponent();
-			DataContext = new MainViewModel();
+			DataContext = new MainViewModel(new FakeLlmClient ());
+			//DataContext = new MainViewModel(new OllamaLlmClient());
 		}
     }
 }

@@ -12,6 +12,13 @@ namespace LocalAIAssistant_App.ViewModels
 {
 	public partial class MainViewModel : ObservableObject
 	{
+		private readonly ILlmClient _llmClient;
+
+		public MainViewModel(ILlmClient llmClient)
+		{
+			_llmClient = llmClient;
+		}
+
 		public ObservableCollection<ChatMessage> Messages { get; } = new();
 		[ObservableProperty]
 		[NotifyCanExecuteChangedFor(nameof(SendCommand))]
@@ -28,17 +35,17 @@ namespace LocalAIAssistant_App.ViewModels
 			ChatMessage replyMsg = new ChatMessage { Role = MessageRole.Assistant, Content = "Thinking..." };
 			Messages.Add(replyMsg);
 
-			try
+			try 
 			{
-				await Task.Delay(3000, cancellationToken);
+				string getReplyMsg = await _llmClient.GetReplyAsync(userMsg.Content, cancellationToken);
 
-				replyMsg.Content = "Receive [" + userMsg.Content + "]";
+				replyMsg.Content = getReplyMsg;
 			}
 			catch (OperationCanceledException)
 			{
 				replyMsg.Content = "Canceled.";
 			}
-			
+
 		}
 
 		private bool CanSend() => !string.IsNullOrWhiteSpace(InputText);
