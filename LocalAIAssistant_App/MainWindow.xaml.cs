@@ -1,6 +1,7 @@
 ﻿using LocalAIAssistant.Infrastructure;
 using LocalAIAssistant.Infrastructure.Ollama;
 using LocalAIAssistant_App.ViewModels;
+using System.Net.Http;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,8 +23,10 @@ namespace LocalAIAssistant_App
         public MainWindow()
         {
             InitializeComponent();
-			DataContext = new MainViewModel(new FakeLlmClient ());
-			//DataContext = new MainViewModel(new OllamaLlmClient());
+			//DataContext = new MainViewModel(new FakeLlmClient ());
+			var httpClient = new HttpClient() { BaseAddress = new Uri("http://localhost:11434") };
+
+			DataContext = new MainViewModel(new OllamaLlmClient(httpClient, "qwen2.5:3b"));
 		}
     }
 }
