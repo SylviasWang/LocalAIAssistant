@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LocalAIAssistant.Core\LocalAIAssistant.Core.csproj" />
     <ProjectReference Include="..\LocalAIAssistant.Infrastructure\LocalAIAssistant.Infrastructure.csproj" />
+    <ProjectReference Include="..\LocalAIAssistant.ViewModels\LocalAIAssistant.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

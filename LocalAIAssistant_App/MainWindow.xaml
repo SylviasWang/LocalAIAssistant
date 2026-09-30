@@ -6,11 +6,15 @@
         xmlns:local="clr-namespace:LocalAIAssistant_App"
         mc:Ignorable="d"
         Title="LocalAI Assistant" Height="450" Width="800">
+    <!-- 聊天視窗：上方訊息清單佔滿剩餘空間，下方一列是輸入框 + Send + Cancel。
+         所有 Binding 的來源都是 MainViewModel（在 code-behind 設為 DataContext）。 -->
     <Grid Margin ="2,5,2,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <!-- 訊息清單：綁定 ViewModel.Messages（ObservableCollection<ChatMessage>）
+             每則顯示「Role : Content」；Content 是 ObservableProperty，串流時會逐字更新 -->
         <ListBox x:Name="ListMsg" Grid.Row="0" ItemsSource="{Binding Messages}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -23,13 +27,16 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
+        <!-- 輸入列 -->
         <Grid Grid.Row="1" Margin ="0,2,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
+            <!-- UpdateSourceTrigger=PropertyChanged：每打一個字就更新 InputText，Send 按鈕的 CanExecute 才能即時啟用/停用 -->
             <TextBox x:Name="TxtContent" Grid.Column="0" Margin ="0,0,2,0" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <!-- SendCommand 由 [RelayCommand] 自動產生；SendCancelCommand 來自 IncludeCancelCommand = true -->
             <Button x:Name="BtnEnter" Content="Send" Padding="5,0,5,0"  Grid.Column="1" Command="{Binding SendCommand}"></Button>
             <Button x:Name="BtnCancel" Content="Cancel" Padding="5,0,5,0"  Grid.Column="2" Command="{Binding SendCancelCommand}"></Button>
         </Grid>
