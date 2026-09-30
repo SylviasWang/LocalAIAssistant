@@ -9,5 +9,6 @@ namespace LocalAIAssistant.Core
 	public interface ILlmClient
 	{
 		public Task<string> GetReplyAsync(string userMessage, CancellationToken cancellationToken);
+		public IAsyncEnumerable<string> StreamReplyAsync(string userMessage, CancellationToken cancellationToken);
 	}
 }

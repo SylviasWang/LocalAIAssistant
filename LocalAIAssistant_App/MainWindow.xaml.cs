@@ -26,7 +26,11 @@ namespace LocalAIAssistant_App
 			//DataContext = new MainViewModel(new FakeLlmClient ());
 			var httpClient = new HttpClient() { BaseAddress = new Uri("http://localhost:11434") };
 
-			DataContext = new MainViewModel(new OllamaLlmClient(httpClient, "qwen2.5:3b"));
+			DataContext = new MainViewModel(new OllamaLlmClient(httpClient, "qwen2.5:3b"
+				, "You are a desktop AI assistant. Reply in the same language as the user's latest message.\r\n" +
+				"If the user writes in English, reply in English.\r\n" +
+				"If the user writes in Chinese, reply in Traditional Chinese (繁體中文，台灣用語), for example: 「這是一個設計模式，用來分離畫面與邏輯。」 " +
+				"Never use Simplified Chinese characters."));
 		}
     }
 }

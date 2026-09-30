@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,15 +36,36 @@ namespace LocalAIAssistant_App.ViewModels
 			ChatMessage replyMsg = new ChatMessage { Role = MessageRole.Assistant, Content = "Thinking..." };
 			Messages.Add(replyMsg);
 
-			try 
+			bool hasReceivedText = false;
+			try
 			{
-				string getReplyMsg = await _llmClient.GetReplyAsync(userMsg.Content, cancellationToken);
+				//string getReplyMsg = await _llmClient.GetReplyAsync(userMsg.Content, cancellationToken);
+				await foreach (string item in _llmClient.StreamReplyAsync(userMsg.Content, cancellationToken))
+				{
+					if (!hasReceivedText && item != string.Empty)
+					{
+						replyMsg.Content = string.Empty;
+						hasReceivedText = true;
+					}
 
-				replyMsg.Content = getReplyMsg;
+					replyMsg.Content += item;
+				}
 			}
 			catch (OperationCanceledException)
 			{
-				replyMsg.Content = "Canceled.";
+				string errorMsg = "Canceled.";
+				if (hasReceivedText)
+					replyMsg.Content += $"\r\n{errorMsg}";
+				else
+					replyMsg.Content = errorMsg;
+			}
+			catch (HttpRequestException)
+			{
+				string errorMsg = "Cannot connect to Ollama. Please make sure Ollama is running.";
+				if (hasReceivedText)
+					replyMsg.Content += $"\r\n{errorMsg}";
+				else
+					replyMsg.Content = errorMsg;
 			}
 
 		}

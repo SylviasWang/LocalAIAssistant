@@ -11,14 +11,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="ListMsg" Grid.Row="0" ItemsSource="{Binding Messages}">
+        <ListBox x:Name="ListMsg" Grid.Row="0" ItemsSource="{Binding Messages}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel>
                         <TextBlock Text="{Binding Role}" />
                         <TextBlock Text=" : " />
-                        <TextBlock Text="{Binding Content}" />
-                    </StackPanel>
+                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" />
+                    </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

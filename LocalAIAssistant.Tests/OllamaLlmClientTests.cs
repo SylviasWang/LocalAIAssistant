@@ -5,6 +5,8 @@ namespace LocalAIAssistant.Tests
 {
 	public class OllamaLlmClientTests
 	{
+		string systemPrompt = "test-system-prompt";
+
 		[Fact]
 		public async Task GetReplyAsync_ValidResponse_ReturnsMessageContent()
 		{
@@ -16,7 +18,7 @@ namespace LocalAIAssistant.Tests
 			// 把假 handler 交給 HttpClient
 			var httpClient = new HttpClient(fakeHttpMessageHandler) { BaseAddress = new Uri("http://localhost:11434") };
 
-			var client = new OllamaLlmClient(httpClient, "test-model");
+			var client = new OllamaLlmClient(httpClient, "test-model", systemPrompt);
 
 			// Act
 			string replyMsg = await client.GetReplyAsync ("Hi", CancellationToken.None);
@@ -37,7 +39,7 @@ namespace LocalAIAssistant.Tests
 			// 把假 handler 交給 HttpClient
 			var httpClient = new HttpClient(fakeHttpMessageHandler) { BaseAddress = new Uri("http://localhost:11434") };
 
-			var client = new OllamaLlmClient(httpClient, "test-model");
+			var client = new OllamaLlmClient(httpClient, "test-model", systemPrompt);
 
 			// Act
 			await client.GetReplyAsync("你好", CancellationToken.None);
@@ -57,11 +59,15 @@ namespace LocalAIAssistant.Tests
 
 			JsonElement messages = root.GetProperty("messages");      // 讀陣列欄位
 			int count = messages.GetArrayLength();                     // 陣列有幾筆
-			Assert.Equal(1, count);
+			Assert.Equal(2, count);
 
 			JsonElement first = messages[0];                           // 陣列的第一筆
-			Assert.Equal("user", first.GetProperty("role").GetString());
-			Assert.Equal("你好", first.GetProperty("content").GetString());
+			Assert.Equal("system", first.GetProperty("role").GetString());
+			Assert.Equal(systemPrompt, first.GetProperty("content").GetString());
+
+			JsonElement second = messages[1];                           // 陣列的第二筆
+			Assert.Equal("user", second.GetProperty("role").GetString());
+			Assert.Equal("你好", second.GetProperty("content").GetString());
 		}
 	}
 }
