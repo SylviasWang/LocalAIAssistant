@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Publish
-      run: dotnet publish LocalAIAssistant/LocalAIAssistant_App.csproj --configuration Release --output publish
+      run: dotnet publish LocalAIAssistant_App/LocalAIAssistant_App.csproj --configuration Release --output publish
 
     - name: Zip
       run: Compress-Archive -Path publish/* -DestinationPath LocalAIAssistant.zip
